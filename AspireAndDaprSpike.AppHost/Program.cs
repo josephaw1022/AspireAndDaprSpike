@@ -2,8 +2,6 @@ using Aspire.Hosting.Dapr;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-// builder.AddDapr();
-
 var postgresDatabaseServer = builder.AddPostgres("PostgresDB", 5432, "DaprPostgresPassword")
         .WithPgAdmin()
         .WithBindMount("./postgres-config/config-store", "/docker-entrypoint-initdb.d");
