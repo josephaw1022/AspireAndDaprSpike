@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Dapr.Client;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,44 +14,37 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDaprClient();
 
-// Bind configuration values from Dapr
+// Create Dapr client
 var daprClient = new DaprClientBuilder().Build();
+
+// Fetch all configuration values from Dapr
 var allConfigValues = await daprClient.GetConfiguration("pg-config", new List<string>());
+
+// Serialize the response to JSON and then deserialize it into the desired data structure
 var configJson = JsonSerializer.Serialize(allConfigValues);
 var configRoot = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, ConfigItem>>>(configJson);
 
-var configDictionary = new Dictionary<string, string>();
-foreach (var item in configRoot["items"])
+// Convert the configuration values into a dictionary that can be used with AddInMemoryCollection
+var configDictionary = new Dictionary<string, string?>();
+if (configRoot != null && configRoot.ContainsKey("items"))
 {
-    configDictionary[$"AppConfig:Items:{item.Key}:Value"] = item.Value.Value;
-    configDictionary[$"AppConfig:Items:{item.Key}:Version"] = item.Value.Version;
-    configDictionary[$"AppConfig:Items:{item.Key}:Metadata:Author"] = item.Value.Metadata.Author;
-    configDictionary[$"AppConfig:Items:{item.Key}:Metadata:CreatedAt"] = item.Value.Metadata.CreatedAt;
+    foreach (var item in configRoot["items"])
+    {
+        configDictionary[$"AppConfig:Items:{item.Key}:Value"] = item.Value.Value;
+        configDictionary[$"AppConfig:Items:{item.Key}:Version"] = item.Value.Version;
+        if (item.Value.Metadata != null)
+        {
+            configDictionary[$"AppConfig:Items:{item.Key}:Metadata:Author"] = item.Value.Metadata.Author;
+            configDictionary[$"AppConfig:Items:{item.Key}:Metadata:CreatedAt"] = item.Value.Metadata.CreatedAt;
+        }
+    }
 }
 
+// Add the configuration dictionary to the application's configuration
 builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
 {
     config.AddInMemoryCollection(configDictionary);
 });
-// Bind configuration values from Dapr
-// var daprClient = new DaprClientBuilder().Build();
-// var configValues = await daprClient.GetConfiguration("pg-config", new List<string>() { "theme", "language", "notifications", "timezone", "currency" });
-
-// var configDictionary = new Dictionary<string, string>();
-// await foreach (var item in configValues.Items.Values.())
-// {
-//     configDictionary[$"AppConfig:Items:{item.Key}:Value"] = item.Value.Value;
-//     configDictionary[$"AppConfig:Items:{item.Key}:Version"] = item.Value.Version;
-//     configDictionary[$"AppConfig:Items:{item.Key}:Metadata:Author"] = item.Value.Metadata.Author;
-//     configDictionary[$"AppConfig:Items:{item.Key}:Metadata:CreatedAt"] = item.Value.Metadata.CreatedAt;
-// }
-
-// var configBuilder = new ConfigurationBuilder()
-//     .AddInMemoryCollection(configDictionary)
-//     .AddConfiguration(builder.Configuration);
-
-// builder.Configuration = configBuilder.Build();
-
 
 
 var app = builder.Build();
@@ -65,15 +59,18 @@ if (app.Environment.IsDevelopment())
 }
 
 
-
-app.MapGet("/", async (DaprClient daprClient) =>
+app.MapGet("/", (IConfiguration configuration) =>
 {
-    var allConfigValues = await daprClient.GetConfiguration("pg-config", new List<string>());
+    var configValue = configuration["AppConfig:Items:theme:Value"];
+    var configVersion = configuration["AppConfig:Items:theme:Version"];
+    var configAuthor = configuration["AppConfig:Items:theme:Metadata:Author"];
+    var configCreatedAt = configuration["AppConfig:Items:theme:Metadata:CreatedAt"];
 
-    return Results.Ok(allConfigValues);
+    return Results.Ok(new { value = $"Configuration Value: {configValue}, Version: {configVersion}, Author: {configAuthor}, Created At: {configCreatedAt}" });
 })
-.WithName("Dapr Config Store Values")
+.WithName("All Configuration Items")
 .WithOpenApi();
+
 
 app.Run();
 
