@@ -1,0 +1,38 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: pg-config
+spec:
+  type: configuration.postgresql
+  version: v1
+  metadata:
+    # Connection string
+    - name: connectionString
+      value: "host=localhost user=postgres password=DaprPostgresPassword port=5432 connect_timeout=10 database=postgres"
+    # Name of the table which holds configuration information
+    - name: table
+      value: "configtable" 
+    # Timeout for database operations, in seconds (optional)
+    #- name: timeoutInSeconds
+    #  value: 20
+    # Name of the table where to store the state (optional)
+    #- name: tableName
+    #  value: "state"
+    # Name of the table where to store metadata used by Dapr (optional)
+    #- name: metadataTableName
+    #  value: "dapr_metadata"
+    # Cleanup interval in seconds, to remove expired rows (optional)
+    #- name: cleanupIntervalInSeconds
+    #  value: 3600
+    # Maximum number of connections pooled by this component (optional)
+    #- name: maxConns
+    #  value: 0
+    # Max idle time for connections before they're closed (optional)
+    #- name: connectionMaxIdleTime
+    #  value: 0
+    # Controls the default mode for executing queries. (optional)
+    #- name: queryExecMode
+    #  value: ""
+    # Uncomment this if you wish to use PostgreSQL as a state store for actors (optional)
+    #- name: actorStateStore
+    #  value: "true"
