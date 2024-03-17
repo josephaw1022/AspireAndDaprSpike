@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\microservice-01\microservice-01.csproj" />
+    <ProjectReference Include="..\microservice-02\microservice-02.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:14
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: DaprPostgresPassword
+    volumes:
+      - ./postgres-config/config-store:/docker-entrypoint-initdb.d
+      - postgres-data:/data/postgres
+    ports:
+      - "5432:5432"
+
+    # Redis service
+  redis:
+    container_name: redis_container
+    image: redis:alpine
+    ports:
+      - '6380:6379'
+    restart: unless-stopped
+    volumes:
+      - redis:/data
+
+volumes:
+  postgres-data:
+  redis:
