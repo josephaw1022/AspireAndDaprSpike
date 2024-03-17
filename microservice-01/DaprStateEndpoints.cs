@@ -18,8 +18,6 @@ public static class DaprStateExtensions
         .WithName("GetState")
         .WithOpenApi();
 
-
-
         // Create or update state
         endpoints.MapPost(basePattern, async (DaprClient daprClient, RandomState1 randomState) =>
         {
