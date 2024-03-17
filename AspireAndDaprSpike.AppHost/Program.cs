@@ -10,7 +10,7 @@ var postgresDatabaseServer = builder.AddPostgres("PostgresDB", 5432, "DaprPostgr
 var configurationDatabase = postgresDatabaseServer.AddDatabase("ConfigurationDB");
 
 
-var configurationStore = builder.AddDaprComponent("pg-config", "configuration", new()
+var configurationStore = builder.AddDaprComponent("config-store-1", "configuration", new()
 {
     LocalPath = "./dapr/ConfigStore.yaml",
 });
