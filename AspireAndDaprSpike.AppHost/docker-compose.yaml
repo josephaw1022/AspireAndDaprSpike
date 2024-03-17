@@ -1,5 +1,6 @@
 version: '3.8'
 services:
+
   postgres:
     image: postgres:14
     container_name: postgres
@@ -10,8 +11,8 @@ services:
       - postgres-data:/data/postgres
     ports:
       - "5432:5432"
+    restart: unless-stopped
 
-    # Redis service
   redis:
     container_name: redis_container
     image: redis:alpine
@@ -20,7 +21,26 @@ services:
     restart: unless-stopped
     volumes:
       - redis:/data
+  
+  mongo:
+    image: mongo:6.0.4
+    restart: unless-stopped
+    volumes:
+      - mongo:/data/db
+    ports:
+      - '27017:27017'
+  
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8092:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
+
 
 volumes:
   postgres-data:
   redis:
+  mongo:

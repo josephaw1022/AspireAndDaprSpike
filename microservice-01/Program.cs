@@ -1,4 +1,5 @@
 using Dapr.Client;
+using microservice_01;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,8 @@ app.MapGet("/", async (DaprClient daprClient) =>
 })
 .WithName("All Configuration Items")
 .WithOpenApi();
+
+app.MapDaprStateCRUDEndpoints("state");
 
 
 app.Run();

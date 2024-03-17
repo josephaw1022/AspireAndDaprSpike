@@ -41,3 +41,9 @@ INSERT INTO configtable (KEY, VALUE, VERSION, METADATA) VALUES
 ('notifications', 'enabled', '1.0', '{"author": "Alice Johnson", "created_at": "2024-03-18"}'),
 ('timezone', 'UTC', '1.0', '{"author": "Bob Brown", "created_at": "2024-03-19"}'),
 ('currency', 'USD', '2.0', '{"author": "Charlie Davis", "created_at": "2024-03-20"}');
+
+
+
+
+-- Create the StateStoreDb database
+CREATE DATABASE StateStoreDb;

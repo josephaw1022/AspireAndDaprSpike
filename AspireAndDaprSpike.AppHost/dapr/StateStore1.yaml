@@ -1,0 +1,20 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: state-store-1
+spec:
+  type: state.mongodb
+  version: v1
+  metadata:
+  - name: host
+    value: "localhost:27017"
+  - name: username
+    value: ""
+  - name: password
+    value: ""
+  - name: databaseName
+    value: "daprStateStore"
+  - name: collectionName
+    value: "state"
+  - name: writeConcern
+    value: "majority"

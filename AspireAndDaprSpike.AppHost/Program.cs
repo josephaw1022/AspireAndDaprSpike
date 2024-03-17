@@ -1,41 +1,54 @@
-using Aspire.Hosting.Dapr;
+using AspireAndDaprSpike.AppHost;
+using Microsoft.Extensions.Configuration;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
+// Load configuration
+var removeVolumesOnDown = builder.Configuration.GetValue<bool>("DockerCompose:RemoveVolumesOnDown");
+
 // Dapr components
+
+// The postgres configuration store
 var configurationStore1 = builder.AddDaprComponent("config-store-1", "configuration", new()
 {
     LocalPath = "./dapr/ConfigStore1.yaml",
 });
 
+// The redis configuration store
 var configurationStore2 = builder.AddDaprComponent("config-store-2", "configuration", new()
 {
     LocalPath = "./dapr/ConfigStore2.yaml",
 });
 
-var dashboard = builder.AddExecutable("dapr-dashboard", "dapr", ".", "dashboard" )
-    .WithHttpEndpoint(containerPort: 8080, hostPort: 8080, name:"dashboard-http", isProxied: false);
-
-
-// Dapr sidecar options
-static DaprSidecarOptions CreateDaprSidecarOptions(string appId)
+// The mongo state store
+var stateStore1 = builder.AddDaprComponent("state-store-1", "state", new()
 {
-    return new()
-    {
-        AppHealthThreshold = 20,
-        AppId = appId,
-    };
-}
+    LocalPath = "./dapr/StateStore1.yaml",
+});
+
+// The postgres state store
+var stateStore2 = builder.AddDaprComponent("state-store-2", "state", new()
+{
+    LocalPath = "./dapr/StateStore2.yaml",
+});
+
+// Executable To Host Dapr Dashboard
+var dashboard = builder.AddExecutable("dapr-dashboard", "dapr", ".", "dashboard")
+    .WithHttpEndpoint(containerPort: 8080, hostPort: 8080, name: "dashboard-http", isProxied: false);
 
 // Microservices
-
 builder.AddProject<Projects.microservice_01>("microservice01")
-    .WithDaprSidecar(CreateDaprSidecarOptions("microservice01-dapr"))
-    .WithReference(configurationStore1);
+    .WithDaprSidecar(DaprSidecarOptionsHelper.CreateDaprSidecarOptions("microservice01-dapr"))
+    .WithReference(configurationStore1)
+    .WithReference(stateStore1);
 
 builder.AddProject<Projects.microservice_02>("microservice02")
-    .WithDaprSidecar(CreateDaprSidecarOptions("microservice02-dapr"))
-    .WithReference(configurationStore2);
+    .WithDaprSidecar(DaprSidecarOptionsHelper.CreateDaprSidecarOptions("microservice02-dapr"))
+    .WithReference(configurationStore2)
+    .WithReference(stateStore2);
+
+// Start Docker Compose
+DockerComposeHelper.StartDockerCompose(removeVolumesOnDown);
 
 // Start the applications
 await builder.Build().RunAsync();
