@@ -6,7 +6,6 @@ namespace AspireAndDaprSpike.AppHost
     {
         public static void StartDockerCompose(bool removeVolumes)
         {
-            // Run "docker compose down" with or without the "-v" flag based on configuration
             if (removeVolumes)
             {
                 RunDockerComposeCommand("down -v");
