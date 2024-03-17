@@ -1,10 +1,11 @@
 using AspireAndDaprSpike.AppHost;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
 // Load configuration
-var removeVolumesOnDown = builder.Configuration.GetValue<bool>("DockerCompose:RemoveVolumesOnDown");
+var removeVolumesOnDown = builder.Configuration.GetValue<bool>("DockerCompose:RemoveVolumesOnDown", false);
 
 // Dapr components
 
@@ -13,7 +14,7 @@ var configurationStore1 = builder.AddDaprComponent("config-store-1", "configurat
 {
     LocalPath = "./dapr/ConfigStore1.yaml",
 });
-
+ 
 // The redis configuration store
 var configurationStore2 = builder.AddDaprComponent("config-store-2", "configuration", new()
 {
@@ -34,7 +35,9 @@ var stateStore2 = builder.AddDaprComponent("state-store-2", "state", new()
 
 // Executable To Host Dapr Dashboard
 var dashboard = builder.AddExecutable("dapr-dashboard", "dapr", ".", "dashboard")
-    .WithHttpEndpoint(containerPort: 8080, hostPort: 8080, name: "dashboard-http", isProxied: false);
+    .WithHttpEndpoint(containerPort: 8080, hostPort: 8080, name: "dashboard-http", isProxied: false)
+    .ExcludeFromManifest();
+
 
 // Microservices
 builder.AddProject<Projects.microservice_01>("microservice01")
@@ -47,8 +50,11 @@ builder.AddProject<Projects.microservice_02>("microservice02")
     .WithReference(configurationStore2)
     .WithReference(stateStore2);
 
-// Start Docker Compose
-DockerComposeHelper.StartDockerCompose(removeVolumesOnDown);
+
+if(builder.Environment.IsDevelopment())
+{
+    DockerComposeHelper.StartDockerCompose(removeVolumesOnDown);
+}
 
 // Start the applications
 await builder.Build().RunAsync();
