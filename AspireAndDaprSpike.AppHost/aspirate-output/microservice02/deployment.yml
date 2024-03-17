@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice02
+  annotations:
+    dapr.io/enabled: true
+    dapr.io/config: tracing
+    dapr.io/app-id: microservice02-dapr
+spec:
+  minReadySeconds: 60
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microservice02
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: microservice02
+    spec:
+      containers:
+      - name: microservice02
+        image: dapr-aspire-demo/microservice02:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        - containerPort: 8443
+        envFrom:
+        - configMapRef:
+            name: microservice02-env
+      terminationGracePeriodSeconds: 180

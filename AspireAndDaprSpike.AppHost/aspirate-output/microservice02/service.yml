@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: microservice02
+spec:
+  type: ClusterIP
+  selector:
+    app: microservice02
+  ports:
+  - name: http
+    port: 8080
+  - name: https
+    port: 8443

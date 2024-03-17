@@ -1,0 +1,96 @@
+{
+  "resources": {
+    "config-store-1": {
+      "type": "dapr.component.v0",
+      "daprComponent": {
+        "localPath": "dapr/ConfigStore1.yaml",
+        "type": "configuration"
+      }
+    },
+    "config-store-2": {
+      "type": "dapr.component.v0",
+      "daprComponent": {
+        "localPath": "dapr/ConfigStore2.yaml",
+        "type": "configuration"
+      }
+    },
+    "state-store-1": {
+      "type": "dapr.component.v0",
+      "daprComponent": {
+        "localPath": "dapr/StateStore1.yaml",
+        "type": "state"
+      }
+    },
+    "state-store-2": {
+      "type": "dapr.component.v0",
+      "daprComponent": {
+        "localPath": "dapr/StateStore2.yaml",
+        "type": "state"
+      }
+    },
+    "microservice01": {
+      "type": "project.v0",
+      "path": "../microservice-01/microservice-01.csproj",
+      "env": {
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES": "true",
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES": "true"
+      },
+      "bindings": {
+        "http": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http"
+        },
+        "https": {
+          "scheme": "https",
+          "protocol": "tcp",
+          "transport": "http"
+        }
+      }
+    },
+    "microservice01-dapr": {
+      "type": "dapr.v0",
+      "dapr": {
+        "application": "microservice01",
+        "appHealthThreshold": 20,
+        "appId": "microservice01-dapr",
+        "components": [
+          "config-store-1",
+          "state-store-1"
+        ]
+      }
+    },
+    "microservice02": {
+      "type": "project.v0",
+      "path": "../microservice-02/microservice-02.csproj",
+      "env": {
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES": "true",
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES": "true"
+      },
+      "bindings": {
+        "http": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http"
+        },
+        "https": {
+          "scheme": "https",
+          "protocol": "tcp",
+          "transport": "http"
+        }
+      }
+    },
+    "microservice02-dapr": {
+      "type": "dapr.v0",
+      "dapr": {
+        "application": "microservice02",
+        "appHealthThreshold": 20,
+        "appId": "microservice02-dapr",
+        "components": [
+          "config-store-2",
+          "state-store-2"
+        ]
+      }
+    }
+  }
+}

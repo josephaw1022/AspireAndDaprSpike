@@ -1,0 +1,8 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: state-store-2
+spec:
+  type: state
+  version: v1
+  metadata: []
