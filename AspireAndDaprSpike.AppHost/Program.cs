@@ -1,11 +1,7 @@
 using AspireAndDaprSpike.AppHost;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-// Load configuration
-var removeVolumesOnDown = builder.Configuration.GetValue<bool>("DockerCompose:RemoveVolumesOnDown", false);
 
 // Dapr components
 
@@ -49,12 +45,6 @@ builder.AddProject<Projects.microservice_02>("microservice02")
     .WithDaprSidecar(DaprSidecarOptionsHelper.CreateDaprSidecarOptions("microservice02-dapr"))
     .WithReference(configurationStore2)
     .WithReference(stateStore2);
-
-
-if(builder.Environment.IsDevelopment())
-{
-    DockerComposeHelper.StartDockerCompose(removeVolumesOnDown);
-}
 
 // Start the applications
 await builder.Build().RunAsync();
