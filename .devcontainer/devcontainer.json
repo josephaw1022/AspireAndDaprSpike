@@ -1,8 +1,5 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/docker-in-docker
 {
   "name": "Aspire & Dapr",
-  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
   "image": "mcr.microsoft.com/devcontainers/dotnet:8.0-jammy",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
   "features": {
@@ -12,12 +9,13 @@
       "moby": true
     },
     "ghcr.io/prom3theu5/aspirational-manifests/aspirate:latest": {},
-    "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/azure/azure-dev/azd:0": {
-      "version": "latest"
-    },
     "ghcr.io/devcontainers/features/common-utils:2": {},
-    "ghcr.io/dapr/cli/dapr-cli:0": {}
+    "ghcr.io/dapr/cli/dapr-cli:0": {},
+    "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
+      "version": "latest",
+      "helm": "latest",
+      "minikube": "latest"
+    }
   },
   "runArgs": [
     "--sysctl",
@@ -36,7 +34,7 @@
         "redhat.vscode-yaml",
         "streetsidesoftware.code-spell-checker",
         "ms-azuretools.vscode-bicep",
-        "eamodio.gitlens"
+        "ms-kubernetes-tools.vscode-kubernetes-tools"
       ]
     }
   },
