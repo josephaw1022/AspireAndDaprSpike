@@ -1,0 +1,14 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: config-store-2
+spec:
+  type: configuration.redis
+  version: v1
+  metadata:
+    - name: redisHost
+      value: "redis:6379"
+    - name: redisPassword
+      value: "Asp1r3P@ssw0rd"
+    - name: enableTLS
+      value: "false"

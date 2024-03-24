@@ -1,0 +1,12 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: config-store-1
+spec:
+  type: configuration.postgresql
+  version: v1
+  metadata:
+    - name: connectionString
+      value: "host=postgres-0.postgres.default.svc port=5432 user=aspireuser password=Asp1r3P@ssw0rd database=aspiredb connect_timeout=10 sslmode=disable"
+    - name: table
+      value: "configtable"

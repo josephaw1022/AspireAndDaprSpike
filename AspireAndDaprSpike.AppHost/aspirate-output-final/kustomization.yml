@@ -1,0 +1,11 @@
+resources:
+- microservice01
+- microservice02
+- dapr\config-store-1.yml
+- dapr\config-store-2.yml
+- dapr\state-store-1.yml
+- dapr\state-store-2.yml
+
+generatorOptions:
+  disableNameSuffixHash: true
+

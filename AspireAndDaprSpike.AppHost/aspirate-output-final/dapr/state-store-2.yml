@@ -1,0 +1,10 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: state-store-2
+spec:
+  type: state.postgresql
+  version: v2
+  metadata:
+    - name: connectionString
+      value: "host=postgres-0.postgres.default.svc port=5432 user=aspireuser password=Asp1r3P@ssw0rd dbname=statestoredb sslmode=disable connect_timeout=10 "

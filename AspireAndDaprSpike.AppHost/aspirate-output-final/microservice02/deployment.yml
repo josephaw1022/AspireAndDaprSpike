@@ -1,0 +1,37 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice02
+  labels:
+    app: microservice02
+
+spec:
+  minReadySeconds: 60
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microservice02
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: microservice02
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "microservice02"
+        dapr.io/app-port: "8080"
+        dapr.io/enable-api-logging: "true"
+    spec:
+      containers:
+      - name: microservice02
+        image: docker.io/josephaw1022/microservice02:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        - containerPort: 8443
+        envFrom:
+        - configMapRef:
+            name: microservice02-env
+      terminationGracePeriodSeconds: 180
