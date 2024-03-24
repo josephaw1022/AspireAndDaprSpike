@@ -52,8 +52,7 @@
       "type": "dapr.v0",
       "dapr": {
         "application": "microservice01",
-        "appHealthThreshold": 20,
-        "appId": "microservice01-dapr",
+        "appId": "microservice01",
         "components": [
           "config-store-1",
           "state-store-1"
@@ -84,8 +83,7 @@
       "type": "dapr.v0",
       "dapr": {
         "application": "microservice02",
-        "appHealthThreshold": 20,
-        "appId": "microservice02-dapr",
+        "appId": "microservice02",
         "components": [
           "config-store-2",
           "state-store-2"

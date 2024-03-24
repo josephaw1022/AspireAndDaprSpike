@@ -1,9 +1,9 @@
 {
   "TemplatePath": null,
   "ContainerSettings": {
-    "Registry": null,
-    "RepositoryPrefix": "dapr-aspire-demo",
-    "Tag": null,
+    "Registry": "docker.io",
+    "RepositoryPrefix": "josephaw1022",
+    "Tag": "latest",
     "Builder": "docker"
   }
 }

@@ -37,12 +37,12 @@ var dashboard = builder.AddExecutable("dapr-dashboard", "dapr", ".", "dashboard"
 
 // Microservices
 builder.AddProject<Projects.microservice_01>("microservice01")
-    .WithDaprSidecar(DaprSidecarOptionsHelper.CreateDaprSidecarOptions("microservice01-dapr"))
+    .WithDaprSidecar()
     .WithReference(configurationStore1)
     .WithReference(stateStore1);
 
 builder.AddProject<Projects.microservice_02>("microservice02")
-    .WithDaprSidecar(DaprSidecarOptionsHelper.CreateDaprSidecarOptions("microservice02-dapr"))
+    .WithDaprSidecar()
     .WithReference(configurationStore2)
     .WithReference(stateStore2);
 
