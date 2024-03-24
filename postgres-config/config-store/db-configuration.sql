@@ -44,6 +44,6 @@ INSERT INTO configtable (KEY, VALUE, VERSION, METADATA) VALUES
 
 
 
-
+-- Run this seperately in pgAdmin or psql
 -- Create the StateStoreDb database
 CREATE DATABASE StateStoreDb;
